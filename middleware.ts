@@ -8,6 +8,7 @@ type AccessPaths =
   | "/list/riders"
   | "/list/deliveries"
   | "/list/tracking"
+  | "/list/offline"
   | "/list"
   | "/support"
   | "/profile";
@@ -25,6 +26,7 @@ const ACCESS_CONTROL: AccessControlMap = {
 
   // Shared admin & account routes
   "/list/tracking": ["admin", "account"],
+  "/list/offline": ["admin", "account"],
   "/list": ["admin", "account"],
 
   // Support-only routes
@@ -73,6 +75,17 @@ export default withAuth(
     if (isProtectedPath(basePath)) {
       const allowedRoles = ACCESS_CONTROL[basePath as AccessPaths];
       const userRole = token.role as Role;
+
+      // Special case for /list/offline path
+      if (fullPath.startsWith("/list/offline")) {
+        console.log("Offline Access Check:", {
+          path: fullPath,
+          basePath: "/list/offline",
+          userRole,
+          allowedRoles: ACCESS_CONTROL["/list/offline"],
+          hasAccess: ACCESS_CONTROL["/list/offline"].includes(userRole),
+        });
+      }
 
       console.log("Access Check:", {
         path: fullPath,

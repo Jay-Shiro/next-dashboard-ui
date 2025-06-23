@@ -5,6 +5,16 @@ import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation"; // Import usePathname
 
+// Define type for menu items
+interface MenuItem {
+  icon: string;
+  label: string;
+  href: string;
+  visible: string[];
+  onClick?: () => Promise<void>;
+  customIcon?: boolean;
+}
+
 const handleLogout = async () => {
   await signOut({ callbackUrl: "/login" });
 };
@@ -42,6 +52,12 @@ const menuItems = [
         label: "Transactions",
         href: "/list/transactions",
         visible: ["admin", "account", "support"],
+      },
+      {
+        icon: "/offline-wifi-icon.svg",
+        label: "Offline",
+        href: "/list/offline",
+        visible: ["admin", "account"],
       },
       {
         icon: "/delivery.png",
@@ -111,6 +127,10 @@ const Menu = () => {
                     <span className="hidden lg:block">{item.label}</span>
                   </div>
                 );
+              }
+
+              {
+                /* Remove special case for Offline - use standard item rendering */
               }
 
               return (
